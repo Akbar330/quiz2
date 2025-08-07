@@ -16,18 +16,19 @@ class HomeController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
-        if ($user->isAdmin()) {
+
+        if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         }
 
-        // Ambil kategori berdasarkan tipe user
-        $categories = Category::where('type', $user->user_type)
-                             ->with(['quizzes' => function($query) {
-                                 $query->where('is_active', true);
-                             }])
-                             ->get();
+        if ($user->role === 'masyarakat') {
+            return redirect()->route('masyarakat.dashboard');
+        }
 
-        return view('home', compact('categories'));
+        if ($user->role === 'pelajar') {
+            return redirect()->route('pelajar.dashboard');
+        }
+
+        return redirect('/'); // fallback
     }
 }
