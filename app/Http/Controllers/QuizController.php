@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Quiz;
-use App\Models\QuizAttempt;
+use App\Models\Category;
 use App\Models\UserAnswer;
+use App\Models\QuizAttempt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,6 +15,14 @@ class QuizController extends Controller
     {
         $this->middleware('auth');
     }
+
+    public function create()
+{
+    $categories = Category::all(); // Pastikan model Category ada
+
+    return view('admin.quizzes.create', compact('categories'));
+}
+
 
     public function show(Quiz $quiz)
     {
