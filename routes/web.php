@@ -19,18 +19,18 @@ Route::get('/', function () {
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-// Masyarakat Dashboard - hanya untuk role masyarakat
+// Ganti route masyarakat/dashboard dari function closure ke controller
 Route::middleware(['auth', 'role:masyarakat'])->group(function () {
-    Route::get('/masyarakat/dashboard', function () {
-        return view('dashboards.masyarakat');
-    })->name('masyarakat.dashboard');
+    Route::get('/masyarakat/dashboard', [QuizController::class, 'showQuestionsForMasyarakat'])->name('masyarakat.dashboard');
+    Route::get('/masyarakat/gacha', [App\Http\Controllers\QuizController::class, 'showQuestionsForMasyarakat'])->name('masyarakat.gacha');
+    Route::post('/masyarakat/answer', [App\Http\Controllers\QuizController::class, 'checkAnswer'])->name('masyarakat.answer');
 });
 
 // Pelajar Dashboard - hanya untuk role pelajar
 Route::middleware(['auth', 'role:pelajar'])->group(function () {
-    Route::get('/pelajar/dashboard', function () {
-        return view('dashboards.pelajar');
-    })->name('pelajar.dashboard');
+    Route::get('/pelajar/dashboard', [QuizController::class, 'showPelajarQuestions'])->name('pelajar.dashboard');
+    Route::get('/pelajar/gacha', [QuizController::class, 'showPelajarQuestions'])->name('pelajar.gacha');
+    Route::post('/pelajar/answer', [App\Http\Controllers\QuizController::class, 'checkPelajarAnswer'])->name('pelajar.answer');
 });
 
 // Quiz Routes
@@ -51,7 +51,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     Route::resource('categories', CategoryController::class);
     Route::resource('quizzes', AdminQuizController::class);
-    
+
 
     Route::get('/quizzes/{quiz}/questions', [QuestionController::class, 'index'])->name('questions.index');
     Route::get('/quizzes/{quiz}/questions/create', [QuestionController::class, 'create'])->name('questions.create');
