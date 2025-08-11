@@ -124,10 +124,9 @@ class QuizController extends Controller
             ->inRandomOrder()
             ->first();
 
-        // Bungkus jadi array agar bisa dipakai @foreach
-        $questions = collect([$question]);
+     $questions = collect([$question]);
 
-        return view('dashboards.masyarakat', compact('questions'));
+    return view('dashboards.masyarakat', compact('questions'));
     }
 
     public function checkAnswer(Request $request)
